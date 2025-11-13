@@ -2,6 +2,8 @@
 
 This project is a deep learning pipeline to prove that conversational **context** is the most critical factor in Emotion Recognition in Conversations (ERC).
 
+<img width="1919" height="905" alt="image" src="https://github.com/user-attachments/assets/4a493615-2ec5-489e-b755-e7b803972597" />
+
 It compares two models in a "fair fight":
 1.  **Baseline:** A context-unaware model that classifies each utterance individually.
 2.  **Contextual:** A Transformer-based model that analyzes the entire dialogue history.
@@ -19,7 +21,10 @@ Our core hypothesis was proven correct. The `contextual` model outperformed the 
 
 Further experiments showed that adding SOTA features like Speaker Embeddings or Focal Loss led to overfitting on this dataset, making our simple `ContextualTransformer` the most robust and high-performing solution.
 
-![Per-Class F1 Lift](outputs/results/f1_lift_chart.png)
+<img width="1200" height="800" alt="image" src="https://github.com/user-attachments/assets/c8ad7921-b58d-438b-80f6-a54ebfc9fb53" />
+<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/053ee7e4-e96e-4fe2-b86f-509723978ef7" />
+
+
 *(Run visualize_results.py to generate this)*
 
 ## 🛠️ Setup and Installation
