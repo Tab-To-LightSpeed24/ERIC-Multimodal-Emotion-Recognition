@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERIC - Emotion Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <h1>Emotion Recognition Demo</h1>
+        
+        <div class="video-player-area">
+            <video id="video-player" controls>
+                <source id="video-source" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="controls-area">
+            <div class="video-selector">
+                <label for="video-select">Choose a video to analyze:</label>
+                <select id="video-select">
+                    <option value="" disabled selected>-- Please select --</option>
+                    {% for video in videos %}
+                    <option value="{{ video }}">{{ video }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button id="predict-btn">Analyze Emotion</button>
+
+            <div id="prediction-result" class="result-box" style="display: none;">
+                <h3>Predicted Emotion</h3>
+                <p id="prediction-output"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoSelect = document.getElementById('video-select');
+            const videoPlayer = document.getElementById('video-player');
+            const videoSource = document.getElementById('video-source');
+            const predictBtn = document.getElementById('predict-btn');
+            const predictionResult = document.getElementById('prediction-result');
+            const predictionOutput = document.getElementById('prediction-output');
+
+            videoSelect.addEventListener('change', () => {
+                const selectedVideo = videoSelect.value;
+                if (selectedVideo) {
+                    videoSource.src = `{{ url_for('video', filename='') }}${selectedVideo}.mp4`;
+                    videoPlayer.load();
+                    predictionResult.style.display = 'none';
+                    predictionOutput.textContent = '';
+                }
+            });
+
+            predictBtn.addEventListener('click', async () => {
+                const videoId = videoSelect.value;
+                if (!videoId) {
+                    alert('Please select a video first.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch("{{ url_for('predict') }}", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ video_id: videoId }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.prediction) {
+                        predictionOutput.textContent = data.prediction;
+                        predictionResult.style.display = 'block';
+                    } else {
+                        throw new Error(data.error || 'Unknown error during prediction.');
+                    }
+                } catch (error) {
+                    console.error('Prediction failed:', error);
+                    alert(`Error: ${error.message}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

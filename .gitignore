@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+venv/
+*.py[cod]
+*.env
+
+# IDE / OS
+.vscode/
+.history/
+.DS_Store
+
+# Data and Models (CRITICAL)
+MELD-RAW/
+MELD-Features-Models/
+outputs/
